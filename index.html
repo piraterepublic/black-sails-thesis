@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wretched of the Sea</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Outfit:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --ink:         #1c1a17;
+  --ink-2:       #3d3a35;
+  --ink-3:       #6b6760;
+  --ink-4:       #9e9a94;
+  --paper:       #f6f3ee;
+  --paper-2:     #edeae3;
+  --paper-3:     #e3dfd7;
+  --gold:        #8c6f3a;
+  --gold-light:  #b8904f;
+  --gold-pale:   #d4b07a;
+  --rule:        rgba(28,26,23,0.11);
+  --rule-strong: rgba(28,26,23,0.22);
+  --f-serif: 'EB Garamond', Georgia, serif;
+  --f-ui:    'Outfit', sans-serif;
+  --ease: cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="dark"] {
+  --ink:         #ede8df;
+  --ink-2:       #c9c3b8;
+  --ink-3:       #9e9890;
+  --ink-4:       #5e5a54;
+  --paper:       #111009;
+  --paper-2:     #1a1812;
+  --paper-3:     #222018;
+  --gold:        #c9a96e;
+  --gold-light:  #e0c288;
+  --gold-pale:   #a07840;
+  --rule:        rgba(237,232,223,0.09);
+  --rule-strong: rgba(237,232,223,0.18);
+}
+
+/* ── BASE ── */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-serif);
+  font-size: 19px;
+  line-height: 1.75;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease);
+  min-height: 100vh;
+}
+/* paper grain */
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:999; opacity:0.022;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 52px; height:54px;
+  background:var(--paper); border-bottom:1px solid var(--rule);
+  transition:background 0.4s var(--ease);
+}
+.topbar-id {
+  font-family:var(--f-ui); font-size:10px; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--ink-3); font-weight:300;
+}
+.topbar-center {
+  position:absolute; left:50%; transform:translateX(-50%);
+  font-family:var(--f-serif); font-size:15px; font-style:italic;
+  font-weight:400; color:var(--ink-2);
+  white-space:nowrap;
+}
+.topbar-nav { display:flex; align-items:center; gap:20px; }
+.nav-btn {
+  font-family:var(--f-ui); font-size:10px; letter-spacing:0.16em;
+  text-transform:uppercase; color:var(--ink-3); background:none;
+  border:none; cursor:pointer; padding:0; transition:color 0.2s; font-weight:300;
+}
+.nav-btn:hover { color:var(--gold); }
+.theme-btn {
+  width:30px; height:30px; border-radius:50%; background:none;
+  border:1px solid var(--rule-strong); cursor:pointer; display:flex;
+  align-items:center; justify-content:center; color:var(--ink-3);
+  transition:all 0.2s;
+}
+.theme-btn:hover { border-color:var(--gold); color:var(--gold); }
+.theme-btn svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; }
+
+/* ── PAGE SHELL ── */
+.homepage { display:block; }
+.homepage.hidden { display:none; }
+.page { display:none; padding-top:54px; min-height:100vh; }
+.page.active { display:block; }
+
+/* ── HERO ── */
+.hero-wrap {
+  padding-top:54px; min-height:92vh;
+  display:grid; grid-template-columns:1fr 420px;
+  max-width:1100px; margin:0 auto;
+  padding-left:52px; padding-right:0;
+  align-items:center;
+}
+.hero-text { padding:80px 0; opacity:0; animation:fadeUp 1s var(--ease) 0.1s forwards; }
+.hero-kicker {
+  font-family:var(--f-ui); font-size:10px; letter-spacing:0.26em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:28px;
+  display:flex; align-items:center; gap:14px;
+}
+.hero-kicker::before { content:''; display:block; width:36px; height:1px; background:var(--gold); }
+h1.hero-title {
+  font-family:var(--f-serif); font-size:clamp(48px,5.5vw,76px);
+  font-weight:400; line-height:1.0; color:var(--ink); margin-bottom:20px;
+  letter-spacing:-0.01em;
+}
+.hero-subtitle {
+  font-family:var(--f-serif); font-size:19px; font-style:italic;
+  font-weight:400; color:var(--ink-3); line-height:1.55;
+  max-width:480px; margin-bottom:52px;
+}
+.hero-meta { display:flex; flex-direction:column; gap:10px; }
+.hero-meta-row { display:flex; gap:8px; align-items:baseline; }
+.hero-meta-key {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--ink-4); min-width:80px; font-weight:300;
+}
+.hero-meta-val { font-family:var(--f-serif); font-size:16px; color:var(--ink-2); }
+
+/* ── SVG ILLUSTRATION ── */
+.hero-illustration {
+  height:100%; display:flex; align-items:center; justify-content:center;
+  opacity:0; animation:fadeIn 1.4s var(--ease) 0.5s forwards;
+  padding:60px 40px 60px 20px;
+}
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+/* ── TOC SECTION ── */
+.toc-section {
+  max-width:860px; margin:0 auto; padding:0 52px 100px;
+  border-top:1px solid var(--rule);
+}
+
+/* front matter rows */
+.fm-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 0; border-bottom:1px solid var(--rule); cursor:pointer;
+  opacity:0; animation:fadeUp 0.7s var(--ease) forwards;
+}
+.fm-row:first-child { border-top: 1px solid var(--rule); margin-top:48px; }
+.fm-row:hover .fm-title { color:var(--gold); }
+.fm-title {
+  font-family:var(--f-serif); font-size:18px; font-style:italic;
+  color:var(--ink-2); transition:color 0.2s;
+}
+.fm-arrow {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.14em;
+  color:var(--gold); opacity:0; transition:opacity 0.2s; font-weight:300;
+}
+.fm-row:hover .fm-arrow { opacity:1; }
+
+/* part labels */
+.part-label {
+  margin-top:60px; margin-bottom:28px;
+  opacity:0; animation:fadeUp 0.7s var(--ease) forwards;
+}
+.part-label-num {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.22em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:6px; font-weight:300;
+}
+.part-label-title {
+  font-family:var(--f-serif); font-size:24px; font-style:italic;
+  font-weight:400; color:var(--ink-2);
+  padding-bottom:18px; border-bottom:1px solid var(--rule);
+}
+
+/* chapter entries */
+.ch-entry {
+  display:grid; grid-template-columns:72px 1fr;
+  gap:0 28px; padding:32px 0;
+  border-bottom:1px solid var(--rule);
+  cursor:pointer;
+  opacity:0; animation:fadeUp 0.7s var(--ease) forwards;
+}
+.ch-entry:first-child { border-top:1px solid var(--rule); }
+.ch-entry:hover .ch-title { color:var(--gold); }
+.ch-entry:hover .ch-numeral { color:var(--gold-pale); }
+.ch-entry:hover .ch-go { opacity:1; transform:translateX(0); }
+.ch-numeral {
+  font-family:var(--f-serif); font-size:60px; font-weight:400;
+  line-height:1; color:var(--rule-strong); transition:color 0.25s;
+  margin-top:2px; user-select:none;
+}
+.ch-label {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--ink-4); margin-bottom:7px; font-weight:300;
+}
+.ch-title {
+  font-family:var(--f-serif); font-size:22px; font-weight:400;
+  color:var(--ink); line-height:1.2; margin-bottom:10px; transition:color 0.25s;
+}
+.ch-subs { display:flex; flex-direction:column; gap:3px; margin-bottom:14px; }
+.ch-sub {
+  font-family:var(--f-serif); font-size:14px; font-style:italic;
+  color:var(--ink-3); line-height:1.4;
+}
+.ch-footer { display:flex; align-items:center; justify-content:space-between; }
+.ch-badge {
+  display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.16em;
+  text-transform:uppercase; border:1px solid; padding:4px 11px; border-radius:2px;
+  font-weight:300;
+}
+.ch-badge.has-video { color:var(--gold); border-color:var(--gold); opacity:0.75; }
+.ch-badge.no-video  { color:var(--ink-4); border-color:var(--rule-strong); }
+.ch-badge svg { width:9px; height:9px; fill:currentColor; }
+.ch-go {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.14em;
+  color:var(--gold); opacity:0; transform:translateX(-6px);
+  transition:all 0.2s var(--ease); font-weight:300;
+}
+
+/* ── PAGE NAV ── */
+.page-nav {
+  max-width:860px; margin:0 auto; padding:22px 52px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid var(--rule);
+}
+.page-back {
+  display:flex; align-items:center; gap:9px;
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.16em;
+  text-transform:uppercase; color:var(--ink-3); background:none;
+  border:none; cursor:pointer; transition:color 0.2s; font-weight:300;
+}
+.page-back:hover { color:var(--gold); }
+.page-back svg { width:13px; height:13px; stroke:currentColor; fill:none; stroke-width:2; }
+.page-crumb {
+  font-family:var(--f-serif); font-size:14px; font-style:italic; color:var(--ink-4);
+}
+
+/* ── PROSE CHAPTER LAYOUT ── */
+.chapter-body {
+  max-width:860px; margin:0 auto; padding:56px 52px 100px;
+  display:grid; grid-template-columns:1fr 260px; gap:72px;
+  align-items:start;
+}
+.chapter-main {}
+.chapter-sidebar { position:sticky; top:80px; }
+
+.chapter-eyebrow {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.22em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:14px;
+  display:flex; align-items:center; gap:10px; font-weight:300;
+}
+.chapter-eyebrow::before { content:''; display:block; width:20px; height:1px; background:var(--gold); }
+h1.chapter-title {
+  font-family:var(--f-serif); font-size:38px; font-weight:400;
+  font-style:italic; color:var(--ink); line-height:1.15; margin-bottom:40px;
+}
+
+/* section headings within chapters */
+.section-head {
+  font-family:var(--f-ui); font-size:10px; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--ink-2); margin:52px 0 24px;
+  padding-top:40px; border-top:1px solid var(--rule); font-weight:400;
+}
+
+/* body prose */
+.prose { font-family:var(--f-serif); font-size:18px; font-weight:400; line-height:1.9; color:var(--ink-2); }
+.prose p + p { margin-top:1.35em; }
+.prose em { font-style:italic; color:var(--ink); }
+.prose strong { font-weight:600; color:var(--ink); }
+
+/* block quotation */
+.prose blockquote {
+  margin:2em 0; padding:0 0 0 28px;
+  border-left:2px solid var(--gold-pale);
+  font-style:italic; color:var(--ink-2); font-size:17px; line-height:1.85;
+}
+.prose blockquote cite {
+  display:block; margin-top:10px;
+  font-family:var(--f-ui); font-size:10px; letter-spacing:0.12em;
+  font-style:normal; color:var(--ink-4); font-weight:300;
+}
+
+/* footnotes */
+.prose sup { font-size:11px; line-height:0; position:relative; top:-0.5em; }
+.prose sup a { color:var(--gold); text-decoration:none; font-family:var(--f-ui); font-size:10px; }
+.fn-ref { position:relative; display:inline; }
+.fn-ref .fn-tip {
+  display:none; position:absolute; left:0; bottom:1.6em; width:280px;
+  background:var(--paper-2); border:1px solid var(--rule-strong);
+  padding:11px 15px; font-size:13px; line-height:1.6;
+  color:var(--ink-2); z-index:50; font-style:normal;
+  font-family:var(--f-serif);
+}
+.fn-ref:hover .fn-tip { display:block; }
+.footnotes { margin-top:52px; padding-top:28px; border-top:1px solid var(--rule); }
+.footnotes-label {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.22em;
+  text-transform:uppercase; color:var(--ink-4); margin-bottom:16px; font-weight:300;
+}
+.fn-item { display:flex; gap:14px; margin-bottom:10px; font-size:14px; line-height:1.65; color:var(--ink-3); font-family:var(--f-serif); }
+.fn-n { font-family:var(--f-ui); font-size:10px; color:var(--gold); min-width:18px; margin-top:2px; flex-shrink:0; font-weight:300; }
+
+/* ── INLINE VIDEO EMBED ── */
+/*
+  USAGE: replace .video-placeholder with a real Vimeo iframe like:
+  <iframe src="https://player.vimeo.com/video/VIDEOID?title=0&byline=0&portrait=0"
+    style="position:absolute;top:0;left:0;width:100%;height:100%;"
+    frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+*/
+.clip-block {
+  margin: 2.5em 0;
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+}
+.clip-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 0 10px;
+}
+.clip-id {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--gold); font-weight:300;
+}
+.clip-ep {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.1em;
+  color:var(--ink-4); font-weight:300;
+}
+.clip-video {
+  position:relative; width:100%; aspect-ratio:16/9;
+  background:#0c0b09; overflow:hidden;
+}
+.clip-video iframe {
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  border:none;
+}
+/* placeholder shown before real embed */
+.video-placeholder {
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:16px;
+  background:#0c0b09;
+}
+.play-ring {
+  width:56px; height:56px; border:1.5px solid rgba(200,175,120,0.35);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  transition:border-color 0.2s;
+}
+.play-ring svg { width:18px; height:18px; fill:rgba(200,175,120,0.5); margin-left:2px; }
+.clip-placeholder-label {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.16em;
+  text-transform:uppercase; color:rgba(200,175,120,0.3); font-weight:300;
+}
+.clip-footer {
+  padding:10px 0 12px; display:flex; align-items:center; gap:20px;
+}
+.clip-title {
+  font-family:var(--f-serif); font-size:14px; font-style:italic; color:var(--ink-3);
+  flex:1;
+}
+.clip-tc {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.1em;
+  color:var(--ink-4); font-weight:300; white-space:nowrap;
+}
+
+/* back-reference link (repeat citations) */
+.clip-ref {
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:var(--f-ui); font-size:10px; letter-spacing:0.1em;
+  color:var(--gold); text-decoration:none; font-weight:300;
+  border-bottom:1px solid var(--gold-pale); padding-bottom:1px;
+  cursor:pointer;
+}
+.clip-ref svg { width:10px; height:10px; stroke:currentColor; fill:none; stroke-width:2; }
+
+/* ── SIDEBAR BLOCKS ── */
+.sb-block { border:1px solid var(--rule); padding:14px 18px; margin-bottom:10px; }
+.sb-label {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--ink-4); margin-bottom:7px; font-weight:300;
+}
+.sb-val { font-family:var(--f-serif); font-size:14px; color:var(--ink-2); line-height:1.5; }
+.sb-val em { font-style:italic; }
+.qr-block { border:1px solid var(--rule); padding:14px 18px; display:flex; align-items:center; gap:14px; margin-top:10px; }
+.qr-sq { width:46px; height:46px; flex-shrink:0; border:1px solid var(--rule-strong); display:flex; align-items:center; justify-content:center; }
+.qr-sq svg { width:28px; height:28px; color:var(--ink-3); }
+.qr-txt {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--ink-4); line-height:1.7; font-weight:300;
+}
+
+/* ── SCENE INDEX ── */
+.index-body { max-width:860px; margin:0 auto; padding:48px 52px 100px; }
+.index-intro { font-family:var(--f-serif); font-size:17px; font-style:italic; color:var(--ink-3); margin-bottom:52px; max-width:520px; line-height:1.7; }
+.idx-part-head {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.22em;
+  text-transform:uppercase; color:var(--gold); padding-bottom:11px;
+  border-bottom:1px solid var(--rule); margin-top:48px; font-weight:300;
+}
+.idx-part-head:first-child { margin-top:0; }
+.idx-ch { border-bottom:1px solid var(--rule); }
+.idx-ch-name {
+  font-family:var(--f-serif); font-size:17px; color:var(--ink-2);
+  padding:14px 0 8px;
+}
+.idx-cols {
+  display:grid; grid-template-columns:1fr 140px 110px 64px;
+  gap:10px; padding:5px 0 5px 14px;
+}
+.idx-col-head {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--ink-4); font-weight:300;
+}
+.idx-row {
+  display:grid; grid-template-columns:1fr 140px 110px 64px;
+  gap:10px; align-items:center; padding:9px 0 9px 14px;
+  border-top:1px solid var(--rule); cursor:pointer; transition:background 0.12s;
+}
+.idx-row:hover { background:var(--paper-2); margin:0 -52px; padding-left:66px; padding-right:52px; }
+.idx-scene { font-family:var(--f-serif); font-size:14px; font-style:italic; color:var(--ink); }
+.idx-ep { font-family:var(--f-ui); font-size:10px; letter-spacing:0.06em; color:var(--ink-3); font-weight:300; }
+.idx-tc { font-family:var(--f-ui); font-size:10px; color:var(--ink-4); font-weight:300; }
+.idx-go { font-family:var(--f-ui); font-size:9px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); text-align:right; font-weight:300; }
+.idx-none { font-family:var(--f-serif); font-size:13px; font-style:italic; color:var(--ink-4); padding:8px 0 8px 14px; border-top:1px solid var(--rule); }
+
+/* ── BIBLIOGRAPHY ── */
+.bib-body { max-width:860px; margin:0 auto; padding:48px 52px 100px; }
+.bib-section { margin-bottom:52px; }
+.bib-section-head {
+  font-family:var(--f-ui); font-size:9px; letter-spacing:0.22em;
+  text-transform:uppercase; color:var(--gold); padding-bottom:11px;
+  border-bottom:1px solid var(--rule); margin-bottom:20px; font-weight:300;
+}
+.bib-entry {
+  font-family:var(--f-serif); font-size:15px; line-height:1.75;
+  color:var(--ink-2); margin-bottom:12px;
+  padding-left:22px; text-indent:-22px;
+}
+.bib-entry em { font-style:italic; color:var(--ink); }
+.bib-ph { font-family:var(--f-serif); font-size:15px; font-style:italic; color:var(--ink-4); }
+
+/* ── SITE FOOTER ── */
+.site-footer {
+  max-width:860px; margin:0 auto; padding:28px 52px;
+  border-top:1px solid var(--rule);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.footer-l { font-family:var(--f-serif); font-size:14px; font-style:italic; color:var(--ink-4); }
+.footer-r { font-family:var(--f-ui); font-size:9px; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink-4); font-weight:300; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}
+.d5{animation-delay:.5s}.d6{animation-delay:.6s}.d7{animation-delay:.7s}.d8{animation-delay:.8s}
+.d9{animation-delay:.9s}.d10{animation-delay:1.0s}.d11{animation-delay:1.1s}.d12{animation-delay:1.2s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:780px){
+  .topbar{padding:0 20px}
+  .topbar-center{display:none}
+  .hero-wrap{grid-template-columns:1fr;padding:0 20px}
+  .hero-illustration{display:none}
+  .toc-section,.page-nav,.chapter-body,.index-body,.bib-body{padding-left:20px;padding-right:20px}
+  .chapter-body{grid-template-columns:1fr;gap:40px}
+  .chapter-sidebar{position:static}
+  .idx-cols,.idx-row{grid-template-columns:1fr 90px}
+  .idx-ep,.idx-tc,.idx-go{display:none}
+  .site-footer{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     TOPBAR
+═══════════════════════════════════════ -->
+<header class="topbar">
+  <div class="topbar-id">MA Thesis &thinsp;·&thinsp; History</div>
+  <div class="topbar-center">The Wretched of the Sea</div>
+  <nav class="topbar-nav">
+    <button class="nav-btn" onclick="showPage('home')">Contents</button>
+    <button class="nav-btn" onclick="showPage('index')">Scene Index</button>
+    <button class="nav-btn" onclick="showPage('bibliography')">Bibliography</button>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">
+      <svg id="icon-sun" style="display:none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </nav>
+</header>
+
+<!-- ═══════════════════════════════════════
+     HOMEPAGE
+═══════════════════════════════════════ -->
+<main class="homepage" id="page-home">
+
+  <!-- Hero -->
+  <div class="hero-wrap">
+    <div class="hero-text">
+      <div class="hero-kicker">MA Thesis &thinsp;·&thinsp; History &thinsp;·&thinsp; 2025</div>
+      <h1 class="hero-title">The Wretched<br>of the Sea</h1>
+      <p class="hero-subtitle">The case for historiophoty as reception-history in <em>Black Sails</em> (2014&ndash;2017)</p>
+      <div class="hero-meta">
+        <div class="hero-meta-row"><span class="hero-meta-key">Author</span><span class="hero-meta-val">[Your Name]</span></div>
+        <div class="hero-meta-row"><span class="hero-meta-key">Supervisor</span><span class="hero-meta-val">[Supervisor Name]</span></div>
+        <div class="hero-meta-row"><span class="hero-meta-key">Institution</span><span class="hero-meta-val">[University]</span></div>
+        <div class="hero-meta-row"><span class="hero-meta-key">Year</span><span class="hero-meta-val">2025</span></div>
+      </div>
+    </div>
+
+    <!-- Nautical illustration -->
+    <div class="hero-illustration" aria-hidden="true">
+      <svg viewBox="0 0 380 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;opacity:0.82">
+        <defs>
+          <style>
+            .il-gold  { stroke: #8c6f3a; }
+            .il-faint { stroke: #8c6f3a; opacity:0.28; }
+            .il-vfaint{ stroke: #8c6f3a; opacity:0.14; }
+            .il-txt   { font-family:'EB Garamond',Georgia,serif; fill:#8c6f3a; }
+            [data-theme="dark"] .il-gold  { stroke:#c9a96e }
+            [data-theme="dark"] .il-faint { stroke:#c9a96e }
+            [data-theme="dark"] .il-vfaint{ stroke:#c9a96e }
+            [data-theme="dark"] .il-txt   { fill:#c9a96e }
+          </style>
+        </defs>
+
+        <!-- outer decorative border fragments -->
+        <rect x="18" y="18" width="344" height="444" fill="none" stroke="#8c6f3a" stroke-width="0.5" opacity="0.2"/>
+        <rect x="24" y="24" width="332" height="432" fill="none" stroke="#8c6f3a" stroke-width="0.3" opacity="0.12"/>
+
+        <!-- compass rose — center -->
+        <g transform="translate(190,240)">
+          <!-- outer ring -->
+          <circle cx="0" cy="0" r="110" fill="none" class="il-vfaint" stroke-width="0.6"/>
+          <circle cx="0" cy="0" r="88"  fill="none" class="il-faint"  stroke-width="0.5"/>
+          <circle cx="0" cy="0" r="52"  fill="none" class="il-faint"  stroke-width="0.5"/>
+          <circle cx="0" cy="0" r="20"  fill="none" class="il-gold"   stroke-width="0.8"/>
+          <circle cx="0" cy="0" r="5"   fill="none" class="il-gold"   stroke-width="0.8"/>
+
+          <!-- cardinal points — diamond spikes -->
+          <polygon points="0,-108 7,-70 0,-52 -7,-70"   fill="#8c6f3a" opacity="0.55"/>
+          <polygon points="0,108  7,70  0,52  -7,70"    fill="#8c6f3a" opacity="0.35"/>
+          <polygon points="-108,0 -70,7 -52,0 -70,-7"  fill="#8c6f3a" opacity="0.35"/>
+          <polygon points="108,0  70,7  52,0  70,-7"   fill="#8c6f3a" opacity="0.35"/>
+
+          <!-- intercardinal — thin spikes -->
+          <line x1="0" y1="-88" x2="0" y2="-96"   class="il-gold" stroke-width="1.2"/>
+          <line x1="62" y1="-62" x2="68" y2="-68"  class="il-faint" stroke-width="0.8"/>
+          <line x1="88" y1="0"  x2="96" y2="0"    class="il-gold" stroke-width="1"/>
+          <line x1="62" y1="62"  x2="68" y2="68"   class="il-faint" stroke-width="0.8"/>
+          <line x1="0" y1="88"  x2="0" y2="96"    class="il-gold" stroke-width="1"/>
+          <line x1="-62" y1="62" x2="-68" y2="68"  class="il-faint" stroke-width="0.8"/>
+          <line x1="-88" y1="0" x2="-96" y2="0"   class="il-gold" stroke-width="1"/>
+          <line x1="-62" y1="-62" x2="-68" y2="-68" class="il-faint" stroke-width="0.8"/>
+
+          <!-- tick marks on ring -->
+          <g class="il-vfaint" stroke-width="0.5">
+            <line x1="0" y1="-108" x2="0" y2="-103"/>
+            <line x1="28" y1="-104" x2="26" y2="-99"/>
+            <line x1="54" y1="-92"  x2="50" y2="-88"/>
+            <line x1="76" y1="-76"  x2="72" y2="-72"/>
+            <line x1="92" y1="-54"  x2="88" y2="-50"/>
+            <line x1="104" y1="-28" x2="99" y2="-26"/>
+            <line x1="108" y1="0"   x2="103" y2="0"/>
+            <line x1="104" y1="28"  x2="99" y2="26"/>
+            <line x1="92" y1="54"   x2="88" y2="50"/>
+            <line x1="76" y1="76"   x2="72" y2="72"/>
+            <line x1="54" y1="92"   x2="50" y2="88"/>
+            <line x1="28" y1="104"  x2="26" y2="99"/>
+            <line x1="0" y1="108"   x2="0" y2="103"/>
+            <line x1="-28" y1="104" x2="-26" y2="99"/>
+            <line x1="-54" y1="92"  x2="-50" y2="88"/>
+            <line x1="-76" y1="76"  x2="-72" y2="72"/>
+            <line x1="-92" y1="54"  x2="-88" y2="50"/>
+            <line x1="-104" y1="28" x2="-99" y2="26"/>
+            <line x1="-108" y1="0"  x2="-103" y2="0"/>
+            <line x1="-104" y1="-28" x2="-99" y2="-26"/>
+            <line x1="-92" y1="-54" x2="-88" y2="-50"/>
+            <line x1="-76" y1="-76" x2="-72" y2="-72"/>
+            <line x1="-54" y1="-92" x2="-50" y2="-88"/>
+            <line x1="-28" y1="-104" x2="-26" y2="-99"/>
+          </g>
+
+          <!-- cardinal letters -->
+          <text x="0" y="-118" class="il-txt" font-size="13" font-weight="500" text-anchor="middle" letter-spacing="0.08em">N</text>
+          <text x="0" y="132"  class="il-txt" font-size="11" text-anchor="middle" opacity="0.6">S</text>
+          <text x="122" y="4"  class="il-txt" font-size="11" text-anchor="middle" opacity="0.6">E</text>
+          <text x="-122" y="4" class="il-txt" font-size="11" text-anchor="middle" opacity="0.6">W</text>
+
+          <!-- inner cross lines -->
+          <line x1="-52" y1="0" x2="52" y2="0" class="il-faint" stroke-width="0.5"/>
+          <line x1="0" y1="-52" x2="0" y2="52"  class="il-faint" stroke-width="0.5"/>
+        </g>
+
+        <!-- rhumb lines from compass center -->
+        <g opacity="0.1" stroke="#8c6f3a" stroke-width="0.5">
+          <line x1="190" y1="240" x2="18" y2="18"/>
+          <line x1="190" y1="240" x2="362" y2="18"/>
+          <line x1="190" y1="240" x2="18" y2="462"/>
+          <line x1="190" y1="240" x2="362" y2="462"/>
+          <line x1="190" y1="240" x2="18" y2="240"/>
+          <line x1="190" y1="240" x2="362" y2="240"/>
+          <line x1="190" y1="240" x2="190" y2="18"/>
+          <line x1="190" y1="240" x2="190" y2="462"/>
+        </g>
+
+        <!-- stylised coastline fragment — top left -->
+        <path d="M 30 60 Q 45 52 58 68 Q 70 80 85 74 Q 98 68 108 80 Q 118 90 130 86 Q 142 82 150 94"
+          fill="none" stroke="#8c6f3a" stroke-width="1.2" opacity="0.4" stroke-linecap="round"/>
+        <!-- depth hatching near coast -->
+        <line x1="40" y1="70" x2="46" y2="78"  stroke="#8c6f3a" stroke-width="0.5" opacity="0.2"/>
+        <line x1="55" y1="72" x2="60" y2="82"  stroke="#8c6f3a" stroke-width="0.5" opacity="0.2"/>
+        <line x1="72" y1="78" x2="76" y2="88"  stroke="#8c6f3a" stroke-width="0.5" opacity="0.2"/>
+        <line x1="90" y1="76" x2="93" y2="86"  stroke="#8c6f3a" stroke-width="0.5" opacity="0.2"/>
+
+        <!-- stylised coastline fragment — bottom right -->
+        <path d="M 230 390 Q 248 382 260 396 Q 272 408 290 400 Q 308 392 322 406 Q 334 416 350 410"
+          fill="none" stroke="#8c6f3a" stroke-width="1.2" opacity="0.3" stroke-linecap="round"/>
+
+        <!-- latitude lines -->
+        <line x1="18" y1="130" x2="362" y2="130" stroke="#8c6f3a" stroke-width="0.4" opacity="0.12"/>
+        <line x1="18" y1="350" x2="362" y2="350" stroke="#8c6f3a" stroke-width="0.4" opacity="0.12"/>
+
+        <!-- longitude lines -->
+        <line x1="100" y1="18" x2="100" y2="462" stroke="#8c6f3a" stroke-width="0.4" opacity="0.12"/>
+        <line x1="280" y1="18" x2="280" y2="462" stroke="#8c6f3a" stroke-width="0.4" opacity="0.12"/>
+
+        <!-- small decorative ship — upper right area -->
+        <g transform="translate(296,100)" opacity="0.5">
+          <line x1="0" y1="18" x2="0" y2="-8" stroke="#8c6f3a" stroke-width="1"/>
+          <path d="M -16 18 Q 0 22 16 18 L 12 12 L -12 12 Z" fill="none" stroke="#8c6f3a" stroke-width="0.9"/>
+          <path d="M -6 12 L -4 -8 L 4 -8 L 6 12" fill="none" stroke="#8c6f3a" stroke-width="0.7"/>
+          <path d="M -10 4 Q 0 -2 10 4" fill="none" stroke="#8c6f3a" stroke-width="0.7"/>
+        </g>
+
+        <!-- map label texts -->
+        <text x="64" y="118" class="il-txt" font-size="8.5" opacity="0.45" font-style="italic" transform="rotate(-8,64,118)">Mar del Norte</text>
+        <text x="240" y="390" class="il-txt" font-size="8" opacity="0.35" font-style="italic" transform="rotate(-5,240,390)">Terra Incognita</text>
+        <text x="30" y="175"  class="il-txt" font-size="7.5" opacity="0.3" transform="rotate(-90,30,175)">Tropicus Cancri</text>
+
+        <!-- degree markers -->
+        <text x="94" y="15"  class="il-txt" font-size="7" opacity="0.3" text-anchor="middle">15°</text>
+        <text x="274" y="15" class="il-txt" font-size="7" opacity="0.3" text-anchor="middle">30°</text>
+        <text x="16" y="134" class="il-txt" font-size="7" opacity="0.3" text-anchor="end">20°</text>
+        <text x="16" y="354" class="il-txt" font-size="7" opacity="0.3" text-anchor="end">10°</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Table of Contents -->
+  <div class="toc-section">
+
+    <!-- Introduction -->
+    <div class="fm-row d2" onclick="showPage('intro')">
+      <span class="fm-title">Introduction</span>
+      <span class="fm-arrow">Open &rarr;</span>
+    </div>
+
+    <!-- Part One -->
+    <div class="part-label d3">
+      <div class="part-label-num">Part One</div>
+      <div class="part-label-title">Historical and Methodological Foundations</div>
+    </div>
+
+    <div style="opacity:0;animation:fadeUp 0.7s var(--ease) forwards" class="d4">
+      <div class="ch-entry d4" onclick="showPage('ch1')">
+        <div class="ch-numeral">I</div>
+        <div>
+          <div class="ch-label">Chapter I</div>
+          <h2 class="ch-title">Teaching the Pirate</h2>
+          <div class="ch-subs">
+            <div class="ch-sub">1.1 &ensp;Seize the means of education!</div>
+            <div class="ch-sub">1.2 &ensp;Towards a theory of critical reception of early America</div>
+            <div class="ch-sub">1.3 &ensp;History need not be done on the page</div>
+          </div>
+          <div class="ch-footer">
+            <span class="ch-badge no-video">No video extracts</span>
+            <span class="ch-go">Open &rarr;</span>
+          </div>
+        </div>
+      </div>
+      <div class="ch-entry d5" onclick="showPage('ch2')">
+        <div class="ch-numeral">II</div>
+        <div>
+          <div class="ch-label">Chapter II</div>
+          <h2 class="ch-title"><em>Hostis Humani Generis</em></h2>
+          <div class="ch-subs">
+            <div class="ch-sub">2.1 &ensp;Mapping the Outlaw</div>
+            <div class="ch-sub">2.2 &ensp;A Republic of Pirates</div>
+            <div class="ch-sub">2.3 &ensp;The Motley Crew</div>
+          </div>
+          <div class="ch-footer">
+            <span class="ch-badge no-video">No video extracts</span>
+            <span class="ch-go">Open &rarr;</span>
+          </div>
+        </div>
+      </div>
+      <div class="ch-entry d6" onclick="showPage('ch3')">
+        <div class="ch-numeral">III</div>
+        <div>
+          <div class="ch-label">Chapter III</div>
+          <h2 class="ch-title">The Ship of State: Politics of Pirate Narratives</h2>
+          <div class="ch-subs">
+            <div class="ch-sub">3.1 &ensp;Truth convenient to none: fact <em>and</em> fiction</div>
+            <div class="ch-sub">3.2 &ensp;A floating fragment of land</div>
+            <div class="ch-sub">3.3 &ensp;Recovering the pirate: from imperial boyhood to Marxist rejoinder</div>
+          </div>
+          <div class="ch-footer">
+            <span class="ch-badge no-video">No video extracts</span>
+            <span class="ch-go">Open &rarr;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Part Two -->
+    <div class="part-label d7">
+      <div class="part-label-num">Part Two</div>
+      <div class="part-label-title"><em>Black Sails</em> as Historiophoty</div>
+    </div>
+
+    <div style="opacity:0;animation:fadeUp 0.7s var(--ease) 0.7s forwards">
+      <div class="ch-entry" onclick="showPage('ch4')">
+        <div class="ch-numeral">IV</div>
+        <div>
+          <div class="ch-label">Chapter IV</div>
+          <h2 class="ch-title">Of Monsters and Men</h2>
+          <div class="ch-subs">
+            <div class="ch-sub">4.1 &ensp;Sociocultural context</div>
+            <div class="ch-sub">4.2 &ensp;The stuff of nightmares: the Pirate as the Monster</div>
+            <div class="ch-sub">4.3 &ensp;Civilization is Coming: Empire as the Monster</div>
+          </div>
+          <div class="ch-footer">
+            <span class="ch-badge has-video"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>Video extracts</span>
+            <span class="ch-go">Open &rarr;</span>
+          </div>
+        </div>
+      </div>
+      <div class="ch-entry" onclick="showPage('ch5')">
+        <div class="ch-numeral">V</div>
+        <div>
+          <div class="ch-label">Chapter V</div>
+          <h2 class="ch-title">Dare To Struggle</h2>
+          <div class="ch-subs">
+            <div class="ch-sub">5.1 &ensp;Reform and revolution: false consciousness</div>
+            <div class="ch-sub">5.2 &ensp;We are many, they are few: class for itself</div>
+            <div class="ch-sub">5.3 &ensp;The landscape after cruelty: revolutionary optimism</div>
+          </div>
+          <div class="ch-footer">
+            <span class="ch-badge has-video"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>Video extracts</span>
+            <span class="ch-go">Open &rarr;</span>
+          </div>
+        </div>
+      </div>
+      <div class="ch-entry" onclick="showPage('ch6')">
+        <div class="ch-numeral">VI</div>
+        <div>
+          <div class="ch-label">Chapter VI</div>
+          <h2 class="ch-title">No Happy Plantations</h2>
+          <div class="ch-subs">
+            <div class="ch-sub">6.1 &ensp;Until all of us are safe: the problem of race</div>
+            <div class="ch-sub">6.2 &ensp;Bring it all down: Flint&rsquo;s arc as race treason</div>
+            <div class="ch-sub">6.3 &ensp;Foreclosed horizons: locating the turning point</div>
+          </div>
+          <div class="ch-footer">
+            <span class="ch-badge has-video"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>Video extracts</span>
+            <span class="ch-go">Open &rarr;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conclusion -->
+    <div class="fm-row" style="opacity:0;animation:fadeUp 0.7s var(--ease) 1.1s forwards" onclick="showPage('conclusion')">
+      <span class="fm-title">Conclusion</span>
+      <span class="fm-arrow">Open &rarr;</span>
+    </div>
+
+  </div><!-- /toc-section -->
+
+  <footer class="site-footer">
+    <div class="footer-l">The Wretched of the Sea</div>
+    <div class="footer-r">MA Thesis &thinsp;·&thinsp; 2025</div>
+  </footer>
+</main>
+
+
+<!-- ═══════════════════════════════════════
+     SCENE INDEX
+═══════════════════════════════════════ -->
+<div class="page" id="page-index">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Scene Index</span>
+  </div>
+  <div class="index-body" style="opacity:0;animation:fadeUp 0.7s var(--ease) 0.1s forwards">
+    <p class="index-intro">All video extracts used in this thesis, organised by chapter. Video extracts appear in Part Two only. Click any row to go to that chapter&rsquo;s analysis page.</p>
+
+    <div class="idx-part-head">Part One &mdash; Historical and Methodological Foundations</div>
+    <div class="idx-ch"><div class="idx-ch-name">I &mdash; Teaching the Pirate</div><div class="idx-none">No video extracts.</div></div>
+    <div class="idx-ch"><div class="idx-ch-name">II &mdash; <em>Hostis Humani Generis</em></div><div class="idx-none">No video extracts.</div></div>
+    <div class="idx-ch"><div class="idx-ch-name">III &mdash; The Ship of State</div><div class="idx-none">No video extracts.</div></div>
+
+    <div class="idx-part-head">Part Two &mdash; Black Sails as Historiophoty</div>
+
+    <div class="idx-ch">
+      <div class="idx-ch-name">IV &mdash; Of Monsters and Men</div>
+      <div class="idx-cols">
+        <div class="idx-col-head">Extract</div>
+        <div class="idx-col-head">Episode</div>
+        <div class="idx-col-head">Timecode</div>
+        <div class="idx-col-head" style="text-align:right">Go to</div>
+      </div>
+      <!-- EDIT: replace placeholder values with actual scene data -->
+      <div class="idx-row" onclick="showPage('ch4')"><div class="idx-scene">IV.1 &mdash; [Scene title]</div><div class="idx-ep">S&mdash;E&mdash;</div><div class="idx-tc">00:00&ndash;00:00</div><div class="idx-go">View &rarr;</div></div>
+      <div class="idx-row" onclick="showPage('ch4')"><div class="idx-scene">IV.2 &mdash; [Scene title]</div><div class="idx-ep">S&mdash;E&mdash;</div><div class="idx-tc">00:00&ndash;00:00</div><div class="idx-go">View &rarr;</div></div>
+      <div class="idx-row" onclick="showPage('ch4')"><div class="idx-scene">IV.3 &mdash; [Scene title]</div><div class="idx-ep">S&mdash;E&mdash;</div><div class="idx-tc">00:00&ndash;00:00</div><div class="idx-go">View &rarr;</div></div>
+    </div>
+
+    <div class="idx-ch">
+      <div class="idx-ch-name">V &mdash; Dare To Struggle</div>
+      <div class="idx-cols">
+        <div class="idx-col-head">Extract</div><div class="idx-col-head">Episode</div><div class="idx-col-head">Timecode</div><div class="idx-col-head" style="text-align:right">Go to</div>
+      </div>
+      <div class="idx-row" onclick="showPage('ch5')"><div class="idx-scene">V.1 &mdash; [Scene title]</div><div class="idx-ep">S&mdash;E&mdash;</div><div class="idx-tc">00:00&ndash;00:00</div><div class="idx-go">View &rarr;</div></div>
+      <div class="idx-row" onclick="showPage('ch5')"><div class="idx-scene">V.2 &mdash; [Scene title]</div><div class="idx-ep">S&mdash;E&mdash;</div><div class="idx-tc">00:00&ndash;00:00</div><div class="idx-go">View &rarr;</div></div>
+      <div class="idx-row" onclick="showPage('ch5')"><div class="idx-scene">V.3 &mdash; [Scene title]</div><div class="idx-ep">S&mdash;E&mdash;</div><div class="idx-tc">00:00&ndash;00:00</div><div class="idx-go">View &rarr;</div></div>
+    </div>
+
+    <div class="idx-ch">
+      <div class="idx-ch-name">VI &mdash; No Happy Plantations</div>
+      <div class="idx-cols">
+        <div class="idx-col-head">Extract</div><div class="idx-col-head">Episode</div><div class="idx-col-head">Timecode</div><div class="idx-col-head" style="text-align:right">Go to</div>
+      </div>
+      <div class="idx-row" onclick="showPage('ch6')"><div class="idx-scene">VI.1 &mdash; [Scene title]</div><div class="idx-ep">S&mdash;E&mdash;</div><div class="idx-tc">00:00&ndash;00:00</div><div class="idx-go">View &rarr;</div></div>
+      <div class="idx-row" onclick="showPage('ch6')"><div class="idx-scene">VI.2 &mdash; [Scene title]</div><div class="idx-ep">S&mdash;E&mdash;</div><div class="idx-tc">00:00&ndash;00:00</div><div class="idx-go">View &rarr;</div></div>
+      <div class="idx-row" onclick="showPage('ch6')"><div class="idx-scene">VI.3 &mdash; [Scene title]</div><div class="idx-ep">S&mdash;E&mdash;</div><div class="idx-tc">00:00&ndash;00:00</div><div class="idx-go">View &rarr;</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     BIBLIOGRAPHY
+═══════════════════════════════════════ -->
+<div class="page" id="page-bibliography">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Bibliography</span>
+  </div>
+  <div class="bib-body" style="opacity:0;animation:fadeUp 0.7s var(--ease) 0.1s forwards">
+    <div class="bib-section">
+      <div class="bib-section-head">Primary Sources &mdash; Audiovisual</div>
+      <p class="bib-entry"><em>Black Sails</em>. Created by Robert Levine and Jonathan Steinberg. Starz, 2014&ndash;2017.</p>
+      <p class="bib-ph">Add further primary sources. Each entry uses the <code>bib-entry</code> class; wrap titles in <code>&lt;em&gt;</code>.</p>
+    </div>
+    <div class="bib-section">
+      <div class="bib-section-head">Primary Sources &mdash; Written</div>
+      <p class="bib-ph">Add primary written sources here.</p>
+    </div>
+    <div class="bib-section">
+      <div class="bib-section-head">Secondary Sources &mdash; History and Historiography</div>
+      <p class="bib-ph">Add secondary sources here.</p>
+    </div>
+    <div class="bib-section">
+      <div class="bib-section-head">Secondary Sources &mdash; Film and Television Studies</div>
+      <p class="bib-ph">Add sources here.</p>
+    </div>
+    <div class="bib-section">
+      <div class="bib-section-head">Secondary Sources &mdash; Theory</div>
+      <p class="bib-ph">Add theoretical sources here.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     INTRODUCTION
+═══════════════════════════════════════ -->
+<div class="page" id="page-intro">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Introduction</span>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-main">
+      <div class="chapter-eyebrow">Introduction</div>
+      <h1 class="chapter-title">Introduction</h1>
+      <div class="prose">
+        <!-- PASTE INTRODUCTION TEXT HERE -->
+        <p>Paste your introduction here. Italics: <em>like this</em>. Footnotes work as shown below.</p>
+        <p>Example footnote: the term historiophoty was coined by Hayden White<span class="fn-ref"><sup><a>1</a></sup><span class="fn-tip">Hayden White, &lsquo;Historiography and Historiophoty&rsquo;, <em>The American Historical Review</em> 93:5 (1988), pp. 1193&ndash;1199.</span></span> to describe the representation of history through visual images and filmic discourse.</p>
+        <div class="footnotes">
+          <div class="footnotes-label">Notes</div>
+          <div class="fn-item"><div class="fn-n">1</div><div>Hayden White, &lsquo;Historiography and Historiophoty&rsquo;, <em>The American Historical Review</em> 93:5 (1988), pp. 1193&ndash;1199.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="chapter-sidebar">
+      <div class="sb-block"><div class="sb-label">Section</div><div class="sb-val">Introduction</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     CHAPTERS I – III  (no video)
+═══════════════════════════════════════ -->
+<div class="page" id="page-ch1">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Part One &thinsp;·&thinsp; Chapter I</span>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-main">
+      <div class="chapter-eyebrow">Chapter I</div>
+      <h1 class="chapter-title">Teaching the Pirate</h1>
+      <div class="prose">
+        <div class="section-head">1.1 &ensp;Seize the means of education!</div>
+        <p>Paste section 1.1 text here.</p>
+        <div class="section-head">1.2 &ensp;Towards a theory of critical reception of early America</div>
+        <p>Paste section 1.2 text here.</p>
+        <div class="section-head">1.3 &ensp;History need not be done on the page</div>
+        <p>Paste section 1.3 text here.</p>
+        <div class="footnotes">
+          <div class="footnotes-label">Notes</div>
+          <p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here.</p>
+        </div>
+      </div>
+    </div>
+    <div class="chapter-sidebar">
+      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">I &mdash; Teaching the Pirate</div></div>
+      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">One &mdash; Historical and Methodological Foundations</div></div>
+      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val" style="font-style:italic;color:var(--ink-4)">None in this chapter</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-ch2">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Part One &thinsp;·&thinsp; Chapter II</span>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-main">
+      <div class="chapter-eyebrow">Chapter II</div>
+      <h1 class="chapter-title"><em>Hostis Humani Generis</em></h1>
+      <div class="prose">
+        <div class="section-head">2.1 &ensp;Mapping the Outlaw</div><p>Paste section 2.1 text here.</p>
+        <div class="section-head">2.2 &ensp;A Republic of Pirates</div><p>Paste section 2.2 text here.</p>
+        <div class="section-head">2.3 &ensp;The Motley Crew</div><p>Paste section 2.3 text here.</p>
+        <div class="footnotes"><div class="footnotes-label">Notes</div><p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here.</p></div>
+      </div>
+    </div>
+    <div class="chapter-sidebar">
+      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">II &mdash; <em>Hostis Humani Generis</em></div></div>
+      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">One &mdash; Historical and Methodological Foundations</div></div>
+      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val" style="font-style:italic;color:var(--ink-4)">None in this chapter</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-ch3">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Part One &thinsp;·&thinsp; Chapter III</span>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-main">
+      <div class="chapter-eyebrow">Chapter III</div>
+      <h1 class="chapter-title">The Ship of State</h1>
+      <div class="prose">
+        <div class="section-head">3.1 &ensp;Truth convenient to none: fact <em>and</em> fiction</div><p>Paste section 3.1 text here.</p>
+        <div class="section-head">3.2 &ensp;A floating fragment of land</div><p>Paste section 3.2 text here.</p>
+        <div class="section-head">3.3 &ensp;Recovering the pirate: from imperial boyhood to Marxist rejoinder</div><p>Paste section 3.3 text here.</p>
+        <div class="footnotes"><div class="footnotes-label">Notes</div><p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here.</p></div>
+      </div>
+    </div>
+    <div class="chapter-sidebar">
+      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">III &mdash; The Ship of State</div></div>
+      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">One &mdash; Historical and Methodological Foundations</div></div>
+      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val" style="font-style:italic;color:var(--ink-4)">None in this chapter</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     CHAPTER IV  (Option D — inline clips)
+═══════════════════════════════════════ -->
+<div class="page" id="page-ch4">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Part Two &thinsp;·&thinsp; Chapter IV</span>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-main">
+      <div class="chapter-eyebrow">Chapter IV &thinsp;·&thinsp; Part Two</div>
+      <h1 class="chapter-title">Of Monsters and Men</h1>
+
+      <div class="prose">
+
+        <!-- 4.1 -->
+        <div class="section-head">4.1 &ensp;Sociocultural context</div>
+        <!--
+          PASTE 4.1 TEXT HERE.
+          This section has no clip embeds — it's contextual/historical.
+          Footnote pattern:
+            some claim<span class="fn-ref"><sup><a>1</a></sup><span class="fn-tip">Hover text.</span></span> that...
+        -->
+        <p>Paste your 4.1 text here. No video extracts in this section.</p>
+
+        <!-- 4.2 -->
+        <div class="section-head">4.2 &ensp;The stuff of nightmares: the Pirate as the Monster</div>
+        <!--
+          PASTE 4.2 TEXT UP TO FIRST BLOCK QUOTE (Singleton speech, Ep. I 9:26–10:26).
+          Then the clip block below.
+        -->
+        <p>Paste your 4.2 opening analysis here, up to the Singleton speech.</p>
+
+        <!-- ── CLIP IV.1 — Singleton speech, S01E01 9:26–10:26 ── -->
+        <!-- REPLACE video-placeholder div with Vimeo iframe when ready -->
+        <div class="clip-block" id="clip-iv-1">
+          <div class="clip-header">
+            <span class="clip-id">Extract IV.1</span>
+            <span class="clip-ep">S01E01 &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 09:26&ndash;10:26</span>
+          </div>
+          <div class="clip-video">
+            <div class="video-placeholder">
+              <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+              <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; S01E01 &thinsp;&middot;&thinsp; 09:26&ndash;10:26</div>
+            </div>
+            <!-- PASTE VIMEO IFRAME HERE:
+            <iframe src="https://player.vimeo.com/video/VIDEOID?title=0&byline=0&portrait=0&color=c9a96e"
+              style="position:absolute;top:0;left:0;width:100%;height:100%"
+              frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            -->
+          </div>
+          <div class="clip-footer">
+            <span class="clip-title">Singleton addresses the captured crew of the merchantman</span>
+            <span class="clip-tc">09:26&ndash;10:26</span>
+          </div>
+        </div>
+
+        <!--
+          PASTE 4.2 ANALYSIS CONTINUING AFTER SINGLETON SPEECH,
+          UP TO Flint/Billy "civilization is coming" (Ep. I 50:24–50:57)
+        -->
+        <p>Continue your 4.2 analysis here, between Singleton and the Flint/Billy scene.</p>
+
+        <!-- ── CLIP IV.2 — Flint/Billy, S01E01 50:24–50:57 ── -->
+        <div class="clip-block" id="clip-iv-2">
+          <div class="clip-header">
+            <span class="clip-id">Extract IV.2</span>
+            <span class="clip-ep">S01E01 &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 50:24&ndash;50:57</span>
+          </div>
+          <div class="clip-video">
+            <div class="video-placeholder">
+              <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+              <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; S01E01 &thinsp;&middot;&thinsp; 50:24&ndash;50:57</div>
+            </div>
+          </div>
+          <div class="clip-footer">
+            <span class="clip-title">Flint to Billy Bones: &ldquo;Civilization is coming.&rdquo;</span>
+            <span class="clip-tc">50:24&ndash;50:57</span>
+          </div>
+        </div>
+
+        <p>Continue 4.2 analysis after the Flint/Billy scene, up to McGraw/Thomas flashback (S02E09 25:18).</p>
+
+        <!-- ── CLIP IV.3 — McGraw/Thomas, S02E09 25:18 ── -->
+        <div class="clip-block" id="clip-iv-3">
+          <div class="clip-header">
+            <span class="clip-id">Extract IV.3</span>
+            <span class="clip-ep">S02E09 &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 25:18</span>
+          </div>
+          <div class="clip-video">
+            <div class="video-placeholder">
+              <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+              <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; S02E09 &thinsp;&middot;&thinsp; 25:18</div>
+            </div>
+          </div>
+          <div class="clip-footer">
+            <span class="clip-title">McGraw to Thomas Hamilton: &ldquo;Civilization needs its monsters.&rdquo;</span>
+            <span class="clip-tc">25:18</span>
+          </div>
+        </div>
+
+        <p>Continue 4.2 analysis — court official execution speech (Ep. XXVII), Billy Bones (Ep. XIV), Kensington trial (Ep. XVIII).</p>
+
+        <!-- ── CLIP IV.4 — Court official execution speech, Ep. XXVII 43:36–44:40 ── -->
+        <div class="clip-block" id="clip-iv-4">
+          <div class="clip-header">
+            <span class="clip-id">Extract IV.4</span>
+            <span class="clip-ep">S03E07 &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 43:36&ndash;44:40</span>
+          </div>
+          <div class="clip-video">
+            <div class="video-placeholder">
+              <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+              <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; Ep. XXVII &thinsp;&middot;&thinsp; 43:36&ndash;44:40</div>
+            </div>
+          </div>
+          <div class="clip-footer">
+            <span class="clip-title">Court official presides over Vane&rsquo;s execution: &ldquo;beasts governed by base instinct&rdquo;</span>
+            <span class="clip-tc">43:36&ndash;44:40</span>
+          </div>
+        </div>
+
+        <!-- ── CLIP IV.5 — Billy Bones "we aren't men", Ep. XIV 45:55–46:10 ── -->
+        <div class="clip-block" id="clip-iv-5">
+          <div class="clip-header">
+            <span class="clip-id">Extract IV.5</span>
+            <span class="clip-ep">S02E04 &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 45:55&ndash;46:10</span>
+          </div>
+          <div class="clip-video">
+            <div class="video-placeholder">
+              <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+              <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; Ep. XIV &thinsp;&middot;&thinsp; 45:55&ndash;46:10</div>
+            </div>
+          </div>
+          <div class="clip-footer">
+            <span class="clip-title">Billy Bones: &ldquo;We aren&rsquo;t criminals to them. We aren&rsquo;t even men.&rdquo;</span>
+            <span class="clip-tc">45:55&ndash;46:10</span>
+          </div>
+        </div>
+
+        <!-- ── CLIP IV.6 — Kensington trial + Flint response, Ep. XVIII 21:10–23:03 ── -->
+        <div class="clip-block" id="clip-iv-6">
+          <div class="clip-header">
+            <span class="clip-id">Extract IV.6</span>
+            <span class="clip-ep">S02E08 &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 21:10&ndash;23:03</span>
+          </div>
+          <div class="clip-video">
+            <div class="video-placeholder">
+              <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+              <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; Ep. XVIII &thinsp;&middot;&thinsp; 21:10&ndash;23:03</div>
+            </div>
+          </div>
+          <div class="clip-footer">
+            <span class="clip-title">Kensington charges Flint / Flint: &ldquo;Everyone is a monster to someone.&rdquo;</span>
+            <span class="clip-tc">21:10&ndash;23:03</span>
+          </div>
+        </div>
+
+        <p>Continue 4.2 — closing analysis including the first-scene visual trap argument.</p>
+
+        <!-- 4.3 -->
+        <div class="section-head">4.3 &ensp;Civilization is Coming: Empire as the Monster</div>
+
+        <p>Paste your 4.3 opening, up to Billy torture monologue (Ep. XV 30:35–32:55).</p>
+
+        <!-- ── CLIP IV.7 — Billy torture monologue, Ep. XV 30:35–32:55 ── -->
+        <div class="clip-block" id="clip-iv-7">
+          <div class="clip-header">
+            <span class="clip-id">Extract IV.7</span>
+            <span class="clip-ep">S02E05 &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 30:35&ndash;32:55</span>
+          </div>
+          <div class="clip-video">
+            <div class="video-placeholder">
+              <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+              <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; Ep. XV &thinsp;&middot;&thinsp; 30:35&ndash;32:55</div>
+            </div>
+          </div>
+          <div class="clip-footer">
+            <span class="clip-title">Billy Bones on torture and dehumanization: &ldquo;they&rsquo;ve changed you&rdquo;</span>
+            <span class="clip-tc">30:35&ndash;32:55</span>
+          </div>
+        </div>
+
+        <p>Continue 4.3, up to Rackham speech (Ep. XXVI 26:38–29:33).</p>
+
+        <!-- ── CLIP IV.8 — Rackham speech to Rogers, Ep. XXVI 26:38–29:33 ── -->
+        <div class="clip-block" id="clip-iv-8">
+          <div class="clip-header">
+            <span class="clip-id">Extract IV.8</span>
+            <span class="clip-ep">S03E06 &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 26:38&ndash;29:33</span>
+          </div>
+          <div class="clip-video">
+            <div class="video-placeholder">
+              <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+              <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; Ep. XXVI &thinsp;&middot;&thinsp; 26:38&ndash;29:33</div>
+            </div>
+          </div>
+          <div class="clip-footer">
+            <span class="clip-title">Rackham to Rogers: the tailor of Leeds, the embargo, the debt</span>
+            <span class="clip-tc">26:38&ndash;29:33</span>
+          </div>
+        </div>
+
+        <p>Continue 4.3 — Eleanor/grandfather (Ep. XXX), Rogers/Spanish official (Ep. XXXIII), Abigail speech (Ep. XVI).</p>
+
+        <!-- ── CLIP IV.9 — Rogers/Spanish official, Ep. XXXIII 34:57–37:03 ── -->
+        <div class="clip-block" id="clip-iv-9">
+          <div class="clip-header">
+            <span class="clip-id">Extract IV.9</span>
+            <span class="clip-ep">S04E03 &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 34:57&ndash;37:03</span>
+          </div>
+          <div class="clip-video">
+            <div class="video-placeholder">
+              <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+              <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; Ep. XXXIII &thinsp;&middot;&thinsp; 34:57&ndash;37:03</div>
+            </div>
+          </div>
+          <div class="clip-footer">
+            <span class="clip-title">Rogers to Spanish official: &ldquo;Labor fuels commerce and commerce fuels security.&rdquo;</span>
+            <span class="clip-tc">34:57&ndash;37:03</span>
+          </div>
+        </div>
+
+        <!-- ── CLIP IV.10 — Abigail speech, Ep. XVI 32:45–33:38 ── -->
+        <div class="clip-block" id="clip-iv-10">
+          <div class="clip-header">
+            <span class="clip-id">Extract IV.10</span>
+            <span class="clip-ep">S02E06 &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 32:45&ndash;33:38</span>
+          </div>
+          <div class="clip-video">
+            <div class="video-placeholder">
+              <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+              <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; Ep. XVI &thinsp;&middot;&thinsp; 32:45&ndash;33:38</div>
+            </div>
+          </div>
+          <div class="clip-footer">
+            <span class="clip-title">Abigail Ashe: &ldquo;These monsters are men &mdash; sons, brothers, fathers.&rdquo;</span>
+            <span class="clip-tc">32:45&ndash;33:38</span>
+          </div>
+        </div>
+
+        <p>Continue and complete 4.3 analysis — closing argument on emotional register and historiophoty.</p>
+
+        <div class="footnotes">
+          <div class="footnotes-label">Notes</div>
+          <p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here when you paste your text.</p>
+        </div>
+
+      </div><!-- /prose -->
+    </div><!-- /chapter-main -->
+
+    <div class="chapter-sidebar">
+      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">IV &mdash; Of Monsters and Men</div></div>
+      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">Two &mdash; <em>Black Sails</em> as Historiophoty</div></div>
+      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val">10 extracts across sections 4.2 and 4.3</div></div>
+      <div class="qr-block">
+        <div class="qr-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="19" y="14" width="2" height="2"/><rect x="14" y="19" width="7" height="2"/></svg></div>
+        <div class="qr-txt">QR code links here<br>in the print version</div>
+      </div>
+    </div>
+
+  </div><!-- /chapter-body -->
+</div><!-- /page-ch4 -->
+
+
+<!-- ═══════════════════════════════════════
+     CHAPTER V  (inline clips — template)
+═══════════════════════════════════════ -->
+<div class="page" id="page-ch5">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Part Two &thinsp;·&thinsp; Chapter V</span>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-main">
+      <div class="chapter-eyebrow">Chapter V &thinsp;·&thinsp; Part Two</div>
+      <h1 class="chapter-title">Dare To Struggle</h1>
+      <div class="prose">
+        <div class="section-head">5.1 &ensp;Reform and revolution: false consciousness</div>
+        <p>Paste 5.1 text here.</p>
+
+        <!--
+          CLIP TEMPLATE — copy and paste wherever a clip is needed:
+
+          <div class="clip-block" id="clip-v-N">
+            <div class="clip-header">
+              <span class="clip-id">Extract V.N</span>
+              <span class="clip-ep">S0XE0X &thinsp;·&thinsp; [Episode title] &thinsp;·&thinsp; 00:00&ndash;00:00</span>
+            </div>
+            <div class="clip-video">
+              <div class="video-placeholder">
+                <div class="play-ring"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div>
+                <div class="clip-placeholder-label">Vimeo embed &thinsp;&middot;&thinsp; timecode</div>
+              </div>
+              <!- REPLACE WITH VIMEO IFRAME ->
+            </div>
+            <div class="clip-footer">
+              <span class="clip-title">Brief scene description</span>
+              <span class="clip-tc">00:00&ndash;00:00</span>
+            </div>
+          </div>
+
+          For a REPEAT CITATION of an earlier clip, use:
+          <span class="clip-ref" onclick="scrollToClip('clip-v-N')">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            See Extract V.N
+          </span>
+        -->
+
+        <div class="section-head">5.2 &ensp;We are many, they are few: class for itself</div>
+        <p>Paste 5.2 text here. Add clip blocks where needed using the template above.</p>
+
+        <div class="section-head">5.3 &ensp;The landscape after cruelty: revolutionary optimism</div>
+        <p>Paste 5.3 text here.</p>
+
+        <div class="footnotes">
+          <div class="footnotes-label">Notes</div>
+          <p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here.</p>
+        </div>
+      </div>
+    </div>
+    <div class="chapter-sidebar">
+      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">V &mdash; Dare To Struggle</div></div>
+      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">Two &mdash; <em>Black Sails</em> as Historiophoty</div></div>
+      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val" style="font-style:italic;color:var(--ink-4)">To be added</div></div>
+      <div class="qr-block"><div class="qr-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="19" y="14" width="2" height="2"/><rect x="14" y="19" width="7" height="2"/></svg></div><div class="qr-txt">QR code links here<br>in the print version</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     CHAPTER VI  (inline clips — template)
+═══════════════════════════════════════ -->
+<div class="page" id="page-ch6">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Part Two &thinsp;·&thinsp; Chapter VI</span>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-main">
+      <div class="chapter-eyebrow">Chapter VI &thinsp;·&thinsp; Part Two</div>
+      <h1 class="chapter-title">No Happy Plantations</h1>
+      <div class="prose">
+        <div class="section-head">6.1 &ensp;Until all of us are safe: the problem of race</div>
+        <p>Paste 6.1 text here. Use clip template from Chapter V comments.</p>
+        <div class="section-head">6.2 &ensp;Bring it all down: Flint&rsquo;s arc as race treason</div>
+        <p>Paste 6.2 text here.</p>
+        <div class="section-head">6.3 &ensp;Foreclosed horizons: locating the turning point</div>
+        <p>Paste 6.3 text here.</p>
+        <div class="footnotes">
+          <div class="footnotes-label">Notes</div>
+          <p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here.</p>
+        </div>
+      </div>
+    </div>
+    <div class="chapter-sidebar">
+      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">VI &mdash; No Happy Plantations</div></div>
+      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">Two &mdash; <em>Black Sails</em> as Historiophoty</div></div>
+      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val" style="font-style:italic;color:var(--ink-4)">To be added</div></div>
+      <div class="qr-block"><div class="qr-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="19" y="14" width="2" height="2"/><rect x="14" y="19" width="7" height="2"/></svg></div><div class="qr-txt">QR code links here<br>in the print version</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     CONCLUSION
+═══════════════════════════════════════ -->
+<div class="page" id="page-conclusion">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Conclusion</span>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-main">
+      <div class="chapter-eyebrow">Conclusion</div>
+      <h1 class="chapter-title">Conclusion</h1>
+      <div class="prose">
+        <p>Paste your conclusion here.</p>
+        <div class="footnotes">
+          <div class="footnotes-label">Notes</div>
+          <p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here.</p>
+        </div>
+      </div>
+    </div>
+    <div class="chapter-sidebar">
+      <div class="sb-block"><div class="sb-label">Section</div><div class="sb-val">Conclusion</div></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     JS
+═══════════════════════════════════════ -->
+<script>
+function showPage(id) {
+  document.querySelector('.homepage').classList.toggle('hidden', id !== 'home');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  if (id !== 'home') {
+    const el = document.getElementById('page-' + id);
+    if (el) { el.classList.add('active'); window.scrollTo(0, 0); }
+  } else {
+    window.scrollTo(0, 0);
+  }
+}
+
+function scrollToClip(clipId) {
+  const el = document.getElementById(clipId);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const dark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', dark ? 'light' : 'dark');
+  document.getElementById('icon-sun').style.display = dark ? 'none' : 'block';
+  document.getElementById('icon-moon').style.display = dark ? 'block' : 'none';
+}
+</script>
+</body>
+</html>
