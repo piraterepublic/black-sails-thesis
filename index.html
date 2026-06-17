@@ -246,11 +246,8 @@ h1.hero-title {
 /* ── PROSE CHAPTER LAYOUT ── */
 .chapter-body {
   max-width:860px; margin:0 auto; padding:56px 52px 100px;
-  display:grid; grid-template-columns:1fr 260px; gap:72px;
-  align-items:start;
 }
 .chapter-main {}
-.chapter-sidebar { position:sticky; top:80px; }
 
 .chapter-eyebrow {
   font-family:var(--f-ui); font-size:9px; letter-spacing:0.22em;
@@ -271,7 +268,7 @@ h1.chapter-title {
 }
 
 /* body prose */
-.prose { font-family:var(--f-serif); font-size:18px; font-weight:400; line-height:1.9; color:var(--ink-2); }
+.prose { font-family:var(--f-serif); font-size:18px; font-weight:400; line-height:1.9; color:var(--ink-2); text-align:justify; }
 .prose p + p { margin-top:1.35em; }
 .prose em { font-style:italic; color:var(--ink); }
 .prose strong { font-weight:600; color:var(--ink); }
@@ -912,9 +909,6 @@ h1.chapter-title {
         </div>
       </div>
     </div>
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Section</div><div class="sb-val">Introduction</div></div>
-    </div>
   </div>
 </div>
 
@@ -944,11 +938,6 @@ h1.chapter-title {
         </div>
       </div>
     </div>
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">I &mdash; Guerilla Historiography</div></div>
-      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">One &mdash; Historical and Methodological Foundations</div></div>
-      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val" style="font-style:italic;color:var(--ink-4)">None in this chapter</div></div>
-    </div>
   </div>
 </div>
 
@@ -968,11 +957,6 @@ h1.chapter-title {
         <div class="footnotes"><div class="footnotes-label">Notes</div><p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here.</p></div>
       </div>
     </div>
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">II &mdash; <em>Hostis Humani Generis</em></div></div>
-      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">One &mdash; Historical and Methodological Foundations</div></div>
-      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val" style="font-style:italic;color:var(--ink-4)">None in this chapter</div></div>
-    </div>
   </div>
 </div>
 
@@ -991,11 +975,6 @@ h1.chapter-title {
         <div class="section-head">3.3 &ensp;Recovering the pirate: from imperial boyhood to Marxist rejoinder</div><p>Paste section 3.3 text here.</p>
         <div class="footnotes"><div class="footnotes-label">Notes</div><p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here.</p></div>
       </div>
-    </div>
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">III &mdash; The Ship of State</div></div>
-      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">One &mdash; Historical and Methodological Foundations</div></div>
-      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val" style="font-style:italic;color:var(--ink-4)">None in this chapter</div></div>
     </div>
   </div>
 </div>
@@ -1251,15 +1230,6 @@ h1.chapter-title {
       </div><!-- /prose -->
     </div><!-- /chapter-main -->
 
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">IV &mdash; Of Monsters and Men</div></div>
-      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">Two &mdash; <em>Black Sails</em> as Historiophoty</div></div>
-      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val">10 extracts across sections 4.2 and 4.3</div></div>
-      <div class="qr-block">
-        <div class="qr-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="19" y="14" width="2" height="2"/><rect x="14" y="19" width="7" height="2"/></svg></div>
-        <div class="qr-txt">QR code links here<br>in the print version</div>
-      </div>
-    </div>
 
   </div><!-- /chapter-body -->
 </div><!-- /page-ch4 -->
@@ -1321,12 +1291,6 @@ h1.chapter-title {
         </div>
       </div>
     </div>
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">V &mdash; Dare To Struggle</div></div>
-      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">Two &mdash; <em>Black Sails</em> as Historiophoty</div></div>
-      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val" style="font-style:italic;color:var(--ink-4)">To be added</div></div>
-      <div class="qr-block"><div class="qr-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="19" y="14" width="2" height="2"/><rect x="14" y="19" width="7" height="2"/></svg></div><div class="qr-txt">QR code links here<br>in the print version</div></div>
-    </div>
   </div>
 </div>
 
@@ -1356,12 +1320,6 @@ h1.chapter-title {
         </div>
       </div>
     </div>
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Chapter</div><div class="sb-val">VI &mdash; No Happy Plantations</div></div>
-      <div class="sb-block"><div class="sb-label">Part</div><div class="sb-val">Two &mdash; <em>Black Sails</em> as Historiophoty</div></div>
-      <div class="sb-block"><div class="sb-label">Video extracts</div><div class="sb-val" style="font-style:italic;color:var(--ink-4)">To be added</div></div>
-      <div class="qr-block"><div class="qr-sq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><rect x="19" y="14" width="2" height="2"/><rect x="14" y="19" width="7" height="2"/></svg></div><div class="qr-txt">QR code links here<br>in the print version</div></div>
-    </div>
   </div>
 </div>
 
@@ -1385,9 +1343,6 @@ h1.chapter-title {
           <p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here.</p>
         </div>
       </div>
-    </div>
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Section</div><div class="sb-val">Conclusion</div></div>
     </div>
   </div>
 </div>
@@ -1419,9 +1374,6 @@ h1.chapter-title {
 <p><strong><em><span>This thesis is dedicated to the memories of my jiddo and my papou, outlaws of their own eras. The point, after all, is indeed to change it.</span></em></strong></p></p>
       </div>
     </div>
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Section</div><div class="sb-val">Acknowledgements</div></div>
-    </div>
   </div>
 </div>
 
@@ -1445,10 +1397,6 @@ h1.chapter-title {
         -->
         <p>Paste your character guide here.</p>
       </div>
-    </div>
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Section</div><div class="sb-val">Annex 1</div></div>
-      <div class="sb-block"><div class="sb-label">Contents</div><div class="sb-val">Key characters referenced in the thesis</div></div>
     </div>
   </div>
 </div>
@@ -1474,10 +1422,6 @@ h1.chapter-title {
         -->
         <p>Paste your narrative overview here.</p>
       </div>
-    </div>
-    <div class="chapter-sidebar">
-      <div class="sb-block"><div class="sb-label">Section</div><div class="sb-val">Annex 2</div></div>
-      <div class="sb-block"><div class="sb-label">Contents</div><div class="sb-val">Season-by-season narrative summary of <em>Black Sails</em></div></div>
     </div>
   </div>
 </div>
