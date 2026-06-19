@@ -225,7 +225,19 @@ h1.hero-title {
   transition:all 0.2s var(--ease); font-weight:300;
 }
 
-/* ── PAGE NAV ── */
+/* intro marker in TOC — like ch-entry but with ornament instead of numeral */
+.ch-intro-mark {
+  font-family:var(--f-serif); font-size:48px; font-weight:300;
+  line-height:1; color:var(--rule-strong); margin-top:6px;
+  user-select:none; transition:color 0.25s;
+}
+.ch-entry:hover .ch-intro-mark { color:var(--gold-pale); }
+
+/* intro page decoration */
+.intro-rule {
+  width:36px; height:1px; background:var(--gold);
+  margin-bottom:24px;
+}
 .page-nav {
   max-width:860px; margin:0 auto; padding:22px 52px;
   display:flex; align-items:center; justify-content:space-between;
@@ -283,6 +295,25 @@ h1.chapter-title {
   display:block; margin-top:10px;
   font-family:var(--f-ui); font-size:10px; letter-spacing:0.12em;
   font-style:normal; color:var(--ink-4); font-weight:300;
+}
+
+/* epigraph — chapter opening or thesis-wide quotes */
+.epigraph {
+  margin:0 0 2.5em 0; padding:0 48px;
+  font-style:italic; color:var(--ink-3);
+  font-size:17px; line-height:1.85;
+}
+.epigraph p { margin-bottom:0.4em; }
+.epigraph cite {
+  display:block; margin-top:10px; font-style:normal;
+  font-family:var(--f-ui); font-size:10px; letter-spacing:0.12em;
+  color:var(--ink-4); font-weight:300; text-align:right;
+}
+
+/* homepage epigraph section */
+.homepage-epigraph {
+  max-width:640px; margin:0 auto 72px; padding:0 52px;
+  opacity:0; animation:fadeUp 0.8s var(--ease) 1.4s forwards;
 }
 
 /* footnotes */
@@ -647,16 +678,39 @@ h1.chapter-title {
   </div>
 
   <!-- Table of Contents -->
+  <div class="homepage-epigraph">
+    <div class="epigraph">
+      <p>Leave this Europe where they are never done talking of Man, yet murder men everywhere they find them, at the corner of every one of their own streets, in all the corners of the globe.</p>
+      <cite>&mdash; Frantz Fanon, <em>The Wretched of the Earth</em></cite>
+    </div>
+    <div class="epigraph">
+      <p>There were times that I was persuaded to sue for peace since then, but that was the day that on some level I knew. That England was broken&hellip; and that sooner or later a good man must resist it.</p>
+      <cite>&mdash; James Flint, <em>Black Sails</em> XXVIII</cite>
+    </div>
+  </div>
+
   <div class="toc-section">
 
-    <!-- Introduction -->
+    <!-- Front matters -->
+    <div class="fm-row d2" onclick="showPage('abstract')">
+      <span class="fm-title">Abstract</span>
+      <span class="fm-arrow">Open &rarr;</span>
+    </div>
     <div class="fm-row d2" onclick="showPage('acknowledgements')">
       <span class="fm-title">Acknowledgements</span>
       <span class="fm-arrow">Open &rarr;</span>
     </div>
-    <div class="fm-row d2" onclick="showPage('intro')">
-      <span class="fm-title">Introduction</span>
-      <span class="fm-arrow">Open &rarr;</span>
+
+    <!-- Introduction — chapter-level entry -->
+    <div class="ch-entry d3" onclick="showPage('intro')" style="border-top:1px solid var(--rule)">
+      <div class="ch-intro-mark">&sect;</div>
+      <div>
+        <h2 class="ch-title">Introduction</h2>
+        <div class="ch-footer">
+          <span class="ch-badge no-video">No video extracts</span>
+          <span class="ch-go">Open &rarr;</span>
+        </div>
+      </div>
     </div>
 
     <!-- Part One -->
@@ -731,7 +785,7 @@ h1.chapter-title {
           <div class="ch-subs">
             <div class="ch-sub">4.1 &ensp;Breaking the frame: sociocultural context</div>
             <div class="ch-sub">4.2 &ensp;The stuff of nightmares: the Pirate as the Monster</div>
-            <div class="ch-sub">4.3 &ensp;Civilization is Coming: Empire as the Monster</div>
+            <div class="ch-sub">4.3 &ensp;Civilization is coming: Empire as the Monster</div>
           </div>
           <div class="ch-footer">
             <span class="ch-badge has-video"><svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>Video extracts</span>
@@ -775,15 +829,15 @@ h1.chapter-title {
 
     <!-- Conclusion -->
     <div class="fm-row" style="opacity:0;animation:fadeUp 0.7s var(--ease) 1.1s forwards" onclick="showPage('conclusion')">
-      <span class="fm-title">Conclusion</span>
+      <span class="fm-title">Conclusion: The Stories that Survive</span>
       <span class="fm-arrow">Open &rarr;</span>
     </div>
     <div class="fm-row" style="opacity:0;animation:fadeUp 0.7s var(--ease) 1.2s forwards" onclick="showPage('annex1')">
-      <span class="fm-title">Annex 1 &mdash; Characters</span>
+      <span class="fm-title">Appendix I &mdash; Principal Characters</span>
       <span class="fm-arrow">Open &rarr;</span>
     </div>
     <div class="fm-row" style="opacity:0;animation:fadeUp 0.7s var(--ease) 1.3s forwards" onclick="showPage('annex2')">
-      <span class="fm-title">Annex 2 &mdash; Narrative overview of the series</span>
+      <span class="fm-title">Appendix II &mdash; Narrative Overview of <em>Black Sails</em></span>
       <span class="fm-arrow">Open &rarr;</span>
     </div>
 
@@ -895,6 +949,7 @@ h1.chapter-title {
   </div>
   <div class="chapter-body">
     <div class="chapter-main">
+      <div class="intro-rule"></div>
       <div class="chapter-eyebrow">Introduction</div>
       <h1 class="chapter-title">Introduction</h1>
       <div class="prose">
@@ -1138,7 +1193,7 @@ h1.chapter-title {
         <p>Continue 4.2 — closing analysis including the first-scene visual trap argument.</p>
 
         <!-- 4.3 -->
-        <div class="section-head">4.3 &ensp;Civilization is Coming: Empire as the Monster</div>
+        <div class="section-head">4.3 &ensp;Civilization is coming: Empire as the Monster</div>
 
         <p>Paste your 4.3 opening, up to Billy torture monologue (Ep. XV 30:35–32:55).</p>
 
@@ -1333,13 +1388,34 @@ h1.chapter-title {
   <div class="chapter-body">
     <div class="chapter-main">
       <div class="chapter-eyebrow">Conclusion</div>
-      <h1 class="chapter-title">Conclusion</h1>
+      <h1 class="chapter-title">The Stories that Survive</h1>
       <div class="prose">
         <p>Paste your conclusion here.</p>
         <div class="footnotes">
           <div class="footnotes-label">Notes</div>
           <p style="font-family:var(--f-serif);font-size:14px;font-style:italic;color:var(--ink-4)">Footnotes will appear here.</p>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     ABSTRACT
+═══════════════════════════════════════ -->
+<div class="page" id="page-abstract">
+  <div class="page-nav">
+    <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
+    <span class="page-crumb">Abstract</span>
+  </div>
+  <div class="chapter-body">
+    <div class="chapter-main">
+      <div class="chapter-eyebrow">Front matter</div>
+      <h1 class="chapter-title">Abstract</h1>
+      <div class="prose">
+        <!-- PASTE ABSTRACT TEXT HERE -->
+        <p>Paste your abstract here.</p>
       </div>
     </div>
   </div>
@@ -1382,12 +1458,12 @@ h1.chapter-title {
 <div class="page" id="page-annex1">
   <div class="page-nav">
     <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
-    <span class="page-crumb">Annex 1 &mdash; Characters</span>
+    <span class="page-crumb">Appendix I &mdash; Principal Characters</span>
   </div>
   <div class="chapter-body">
     <div class="chapter-main">
-      <div class="chapter-eyebrow">Annex 1</div>
-      <h1 class="chapter-title">Characters</h1>
+      <div class="chapter-eyebrow">Appendix I</div>
+      <h1 class="chapter-title">Principal Characters</h1>
       <div class="prose">
         <!-- PASTE CHARACTER LIST/DESCRIPTIONS HERE -->
         <!-- Suggested pattern for each character entry:
@@ -1406,12 +1482,12 @@ h1.chapter-title {
 <div class="page" id="page-annex2">
   <div class="page-nav">
     <button class="page-back" onclick="showPage('home')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>Back to contents</button>
-    <span class="page-crumb">Annex 2 &mdash; Narrative overview</span>
+    <span class="page-crumb">Appendix II &mdash; Narrative Overview</span>
   </div>
   <div class="chapter-body">
     <div class="chapter-main">
-      <div class="chapter-eyebrow">Annex 2</div>
-      <h1 class="chapter-title">Narrative Overview of the Series</h1>
+      <div class="chapter-eyebrow">Appendix II</div>
+      <h1 class="chapter-title">Narrative Overview of <em>Black Sails</em></h1>
       <div class="prose">
         <!-- PASTE NARRATIVE OVERVIEW HERE -->
         <!-- Suggested pattern for season-by-season breakdown:
